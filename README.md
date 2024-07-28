@@ -8,7 +8,7 @@ Build with Pathfinder 1e in mind, but some functionality will be useful for othe
 Class for generating multi-attack outputs in a compact format, similar to the pf_attack template in roll20.
 Provides highlighting of natural 1s and 20s, and confirmation rolls conditional on the attack roll being a threat.
 
-![CornugonSmash](https://github.com/user-attachments/assets/6cbb788b-8b31-41f1-bb62-4019547d93a5)
+![CornugonSmash](https://github.com/user-attachments/assets/b4a91c7d-e738-4034-a15e-7f117e557c4e)
 
 
 ### Example Usage
