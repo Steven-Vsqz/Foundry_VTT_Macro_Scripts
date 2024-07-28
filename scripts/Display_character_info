@@ -1,0 +1,325 @@
+let token = canvas.tokens.get(game.user.targets.ids[0]);
+if (token) {
+    let actor = token.actor;
+    let name = actor.data.name;
+    let hp = actor.data.data.attributes.hp;
+    let currentHP = hp.value;
+    let maxHP = hp.max;
+    let str = actor.data.data.abilities.str.total;
+    let dex = actor.data.data.abilities.dex.total;
+    let con = actor.data.data.abilities.con.total;
+    let int = actor.data.data.abilities.int.total;
+    let wis = actor.data.data.abilities.wis.total;
+    let cha = actor.data.data.abilities.cha.total;
+    let strMod = actor.data.data.abilities.str.mod;
+    let dexMod = actor.data.data.abilities.dex.mod;
+    let conMod = actor.data.data.abilities.con.mod;
+    let intMod = actor.data.data.abilities.int.mod;
+    let wisMod = actor.data.data.abilities.wis.mod;
+    let chaMod = actor.data.data.abilities.cha.mod;
+    let ac = actor.data.data.attributes.ac.normal.total;
+    let touchAC = actor.data.data.attributes.ac.touch.total;
+    let flatFootedAC = actor.data.data.attributes.ac.flatFooted.total;
+    let cmd = actor.data.data.attributes.cmd.total;
+    let fortitude = actor.data.data.attributes.savingThrows.fort.total;
+    let reflex = actor.data.data.attributes.savingThrows.ref.total;
+    let will = actor.data.data.attributes.savingThrows.will.total;
+    let bab = actor.data.data.attributes.bab.total;
+    let cmb = actor.data.data.attributes.cmb.total;
+    let initiative = actor.data.data.attributes.init.total;
+    let alignment = actor.data.data.details.alignment;
+    let landSpeed = actor.data.data.attributes.speed.land.total;
+    let flySpeed = actor.data.data.attributes.speed.fly.total;
+    let size = actor.data.data.traits.size;
+    let creatureType = actor.data.data.details.type; // Change this to get the creature type
+    let buffs = actor.effects.map(effect => `<li>${effect.data.label}</li>`).join("");
+
+    let weapons = actor.items.filter(item => item.type === "weapon").map(item => `<option value="${item.id}">${item.name}</option>`).join("");
+    let equipment = actor.items.filter(item => ["equipment", "consumable", "loot", "miscellaneous"].includes(item.type)).map(item => `<option value="${item.id}">${item.name}</option>`).join("");
+    let classFeatures = actor.items.filter(item => item.type === "class").map(item => `<option value="${item.id}">${item.name}</option>`).join("");
+    let feats = actor.items.filter(item => item.type === "feat").map(item => `<option value="${item.id}">${item.name}</option>`).join("");
+    let attacks = actor.items.filter(item => item.type === "attack").map(item => `<option value="${item.id}">${item.name}</option>`).join("");
+    let spellKnown = actor.items.filter(item => item.type === "spell").map(item => `<option value="${item.id}">${item.name}</option>`).join(""); 
+
+    let content = `
+        <style>
+            .dialog-content {
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+                color: #333;
+                max-width: 600px;
+            }
+            .header {
+                text-align: center;
+                font-weight: bold;
+                font-size: 20px;
+                margin-bottom: 15px;
+                color: #2c3e50;
+            }
+            .section {
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                padding: 10px;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .section-title {
+                text-align: center;
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #2980b9;
+                border-bottom: 1px solid #2980b9;
+                padding-bottom: 2px;
+                cursor: pointer;
+            }
+            .stats, .attributes, .defenses, .attack, .information, .buffs {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+            }
+            .stat-block {
+                text-align: center;
+                margin: 5px 10px;
+                position: relative;
+            }
+            .stat-block div {
+                margin: 2px 0;
+            }
+            .tooltip {
+                visibility: hidden;
+                background-color: black;
+                color: #fff;
+                text-align: center;
+                border-radius: 5px;
+                padding: 5px;
+                position: absolute;
+                z-index: 1;
+                bottom: 100%; 
+                left: 50%;
+                margin-left: -60px;
+                opacity: 0;
+                transition: opacity 0.3s;
+                width: 120px;
+            }
+            .stat-block:hover .tooltip {
+                visibility: visible;
+                opacity: 1;
+            }
+            select {
+                width: 100%;
+                padding: 5px;
+            }
+            ul {
+                padding: 0;
+                margin: 0;
+                list-style: none;
+            }
+            .buffs ul {
+                max-height: 100px;
+                overflow-y: auto;
+                border: 1px solid #ddd;
+                padding: 5px;
+                border-radius: 5px;
+            }
+            .highlight {
+                color: #c0392b;
+            }
+        </style>
+        <div class="dialog-content">
+            <div class="header">${name}</div>
+            <div class="section hp">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Hit Points</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>Current HP</div>
+                        <div class="highlight">${currentHP}</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Max HP</div>
+                        <div class="highlight">${maxHP}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="section attributes">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Attributes</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>Strength</div>
+                        <div>${str} (${strMod >= 0 ? "+" : ""}${strMod})</div>
+                        <div class="tooltip">Strength affects physical power and carrying capacity.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Dexterity</div>
+                        <div>${dex} (${dexMod >= 0 ? "+" : ""}${dexMod})</div>
+                        <div class="tooltip">Dexterity affects agility and reflexes.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Constitution</div>
+                        <div>${con} (${conMod >= 0 ? "+" : ""}${conMod})</div>
+                        <div class="tooltip">Constitution affects health and stamina.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Intelligence</div>
+                        <div>${int} (${intMod >= 0 ? "+" : ""}${intMod})</div>
+                        <div class="tooltip">Intelligence affects knowledge and reasoning.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Wisdom</div>
+                        <div>${wis} (${wisMod >= 0 ? "+" : ""}${wisMod})</div>
+                        <div class="tooltip">Wisdom affects perception and insight.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Charisma</div>
+                        <div>${cha} (${chaMod >= 0 ? "+" : ""}${chaMod})</div>
+                        <div class="tooltip">Charisma affects influence and social interactions.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="section defenses">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Defenses</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>AC</div>
+                        <div>${ac}</div>
+                        <div class="tooltip">Armor Class (AC) represents how hard it is to hit this character.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Touch AC</div>
+                        <div>${touchAC}</div>
+                        <div class="tooltip">Touch AC is the defense against touch attacks.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Flat-footed AC</div>
+                        <div>${flatFootedAC}</div>
+                        <div class="tooltip">Flat-footed AC is the defense when the character is not agile.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>CMD</div>
+                        <div>${cmd}</div>
+                        <div class="tooltip">Combat Maneuver Defense (CMD) is the defense against maneuvers.</div>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>Fortitude</div>
+                        <div>${fortitude >= 0 ? "+" : ""}${fortitude}</div>
+                        <div class="tooltip">Fortitude saves protect against physical effects.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Reflex</div>
+                        <div>${reflex >= 0 ? "+" : ""}${reflex}</div>
+                        <div class="tooltip">Reflex saves protect against effects that can be dodged.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Will</div>
+                        <div>${will >= 0 ? "+" : ""}${will}</div>
+                        <div class="tooltip">Will saves protect against mental effects.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="section attack">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Combat</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>BAB</div>
+                        <div>${bab >= 0 ? "+" : ""}${bab}</div>
+                        <div class="tooltip">Base Attack Bonus (BAB) affects combat prowess.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>CMB</div>
+                        <div>${cmb >= 0 ? "+" : ""}${cmb}</div>
+                        <div class="tooltip">Combat Maneuver Bonus (CMB) affects the ability to perform maneuvers.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Initiative</div>
+                        <div>${initiative >= 0 ? "+" : ""}${initiative}</div>
+                        <div class="tooltip">Initiative affects the order of actions in combat.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="section information">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">General Info</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>Alignment</div>
+                        <div>${alignment}</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Land Speed</div>
+                        <div>${landSpeed} ft.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Fly Speed</div>
+                        <div>${flySpeed} ft.</div>
+                    </div>
+                    <div class="stat-block">
+                        <div>Size</div>
+                        <div>${size}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="section buffs">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Active Buffs</div>
+                <ul>${buffs}</ul>
+            </div>
+            <div class="section equipment">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Equipment</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>Weapons</div>
+                        <select>${weapons}</select>
+                    </div>
+                    <div class="stat-block">
+                        <div>Equipment</div>
+                        <select>${equipment}</select>
+                    </div>
+                </div>
+            </div>
+            <div class="section features">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Creature Type</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>Creature Type</div>
+                        <div>${creatureType}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="section features">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Features</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>Class Features</div>
+                        <select>${classFeatures}</select>
+                    </div>
+                    <div class="stat-block">
+                        <div>Feats</div>
+                        <select>${feats}</select>
+                    </div>
+                </div>
+            </div>
+            <div class="section spells">
+                <div class="section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">Spells</div>
+                <div class="stats">
+                    <div class="stat-block">
+                        <div>Attacks</div>
+                        <select>${attacks}</select>
+                    </div>
+                    <div class="stat-block">
+                        <div>Spells Known</div>
+                        <select>${spellKnown}</select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    new Dialog({
+        title: "Targeted Token Information",
+        content: content,
+        buttons: {},
+        default: "buttons",
+    }).render(true);
+} else {
+    ui.notifications.error("No token was targeted on the canvas.");
+}
