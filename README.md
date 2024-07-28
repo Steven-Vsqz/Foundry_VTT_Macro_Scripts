@@ -1,7 +1,17 @@
 # Macros for Foundry VTT
 
-Module that provides tools for writing macros in Foundry VTT.
-Build with Pathfinder 1e in mind, but some functionality will be useful for other game systems as well.
+Foundry VTT (Virtual Tabletop) is a feature-rich, online platform designed for running tabletop role-playing games (RPGs). It offers robust tools for game masters and players, including dynamic lighting, audio integration, and extensive customization options. Foundry VTT supports various game systems, providing a flexible and immersive experience for remote RPG sessions.
+<br>
+<br>
+<div align="center">
+<img src="https://i.imgur.com/9LlMPJZ.png" height="80%" width="80%" alt="Failed RDP Steps"/>
+</div>
+<br>
+<p>
+Macros in Foundry VTT are highly useful as they automate repetitive tasks, such as rolling dice or managing character abilities, enhancing game efficiency. They streamline gameplay by reducing manual input, allowing game masters and players to focus more on storytelling and strategy. Macros ensure consistency and accuracy in game mechanics, reducing the potential for human error. Additionally, they can be customized to fit specific needs, such as automating complex combat sequences or managing inventory. This flexibility saves time and enhances the gaming experience, making sessions smoother and more enjoyable for everyone involved.
+</p>
+
+
 
 ## AttackTable
 
