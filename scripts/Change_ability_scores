@@ -1,0 +1,58 @@
+// Get the array of targeted tokens on the canvas
+const targets = Array.from(game.user.targets);
+
+if (targets.length === 0) {
+  return; // Exit if no targets are selected
+}
+
+// Define the list of ability scores
+const abilityScores = ["str", "dex", "con", "int", "wis", "cha"];
+
+// Create a dialog box for user input
+new Dialog({
+  title: "Modify Ability Scores",
+  content: `
+    <form>
+      <div class="form-group">
+        <label style="font-weight: bold; font-size: 14px;">Enter a number (-10 to 10):</label>
+        <input id="input-number" name="input-number" type="number" min="-10" max="10" step="1" style="width: 100%; padding: 5px; font-size: 14px;" />
+      </div>
+      <div class="form-group">
+        <label style="font-weight: bold; font-size: 14px;">Select Ability Score to Affect:</label>
+        <select id="ability-score" name="ability-score" style="width: 100%; padding: 5px; font-size: 14px;">
+          ${abilityScores.map(score => `<option value="${score.toLowerCase()}">${score}</option>`).join('')}
+        </select>
+      </div>
+    </form>
+  `,
+  buttons: {
+    ok: {
+      label: "OK",
+      callback: async (html) => {
+        // Get the input number
+        const inputNumber = parseInt(html.find('[name="input-number"]').val(), 10);
+        if (isNaN(inputNumber)) {
+          return; // Exit if the input number is invalid
+        }
+
+        // Get the selected ability score
+        const abilityScore = html.find('[name="ability-score"]').val();
+
+        // Iterate through the targeted tokens and update their ability scores
+
+        for (let target of targets) {
+          const actor = target.actor;
+          const abilityValue = actor.data.data.abilities[abilityScore].value;
+
+          // Update the ability score
+          const newAbilityValue = abilityValue + inputNumber;
+          await actor.update({ [`data.abilities.${abilityScore}.value`]: newAbilityValue });
+        }
+      }
+    },
+    cancel: {
+      label: "Cancel"
+    }
+  },
+  default: "ok"
+}).render(true);
