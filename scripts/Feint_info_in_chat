@@ -1,0 +1,36 @@
+let BuffName = "Feint in Combat";
+const targetMacro = "applyBuff";
+var params = 'toggle to me at @classes.bard.level';
+window.macroChain = window.macroChain?.concat([params]) ?? [params];
+await game.macros.find(o => o.name == targetMacro)?.execute();
+const tokens = Array.from(game.user.targets);
+let actors = tokens.map(o => o.actor);
+ChatMessage.create({
+speaker : ChatMessage.getSpeaker(actor),
+content: `
+        <h2> ${BuffName} Toggled </h2>
+        <table style="wdith=100%; text-align:center;">
+        <h3> You can also use Bluff to feint in combat, causing your opponent to be <b>denied his Dexterity bonus to his AC</b> against your next attack. The DC of this check is equal to <b style="color: red;"> 10 + your opponent’s base attack bonus + your opponent’s Wisdom modifier </b>. If your opponent is trained in Sense Motive, the DC is instead equal to 10 + your opponent’s Sense Motive bonus, if higher. For more information on feinting in combat, see Combat.
+<br>
+<br>
+Action: Feinting in combat is a standard action.
+<br>
+<br>
+Retry? Yes. You can attempt to feint against someone again if you fail. </h3>
+</table>
+`});
+
+//USAGE
+// Replace BUFFNAME with the EXACT name of the buff. The buff must exist in either the Items-Buffs folder, the pf-Buffs compendium or Common Buffs compendium. It will prioritize in that order.
+//Replace TARGET(S) with one or more of the following (separated by commas for multiple types):
+//selected : will target selections
+//character name : will target named character. must be exact
+//template : all tokens within the last template of the source player
+//me/myself : self
+//PCs : all players
+//NPCs : all npcs
+//You can use a minus sign (-) to remove from list. For example "PCs,-Jaxsar" will target all PCs except Jaxsar
+//Replace BUFFLEVEL with the level of the buff. You can also use formulas such as @classes.bard.level
+//LENGTH and DISTANCE are OPTIONAL. Delete everything after BUFFLEVEL if not using.
+//Replace LENGTH with a number/formula and units [Turn(s), Round(s), Minute(s), Hour(s)]. Ex: "10 Minutes"
+//Replace DISTANCE with a number corresponding to tiles
