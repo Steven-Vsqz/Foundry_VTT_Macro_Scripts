@@ -1,0 +1,42 @@
+let BuffName = "Demoralize Opponent";
+const targetMacro = "applyBuff";
+var params = 'toggle to me at @classes.bard.level';
+window.macroChain = window.macroChain?.concat([params]) ?? [params];
+await game.macros.find(o => o.name == targetMacro)?.execute();
+const tokens = Array.from(game.user.targets);
+let actors = tokens.map(o => o.actor);
+ChatMessage.create({
+speaker : ChatMessage.getSpeaker(actor),
+content: `
+        <h2> ${BuffName} Toggled </h2>
+        <table style="wdith=100%; text-align:center;">
+        <h3> You can use this skill to cause an opponent to become <b>SHAKEN</b> for a number of rounds. This shaken condition doesn’t stack with other shaken conditions to make an affected creature frightened. The DC of this check is equal to <b style="color: red;"> 10 + the target’s Hit Dice + the target’s Wisdom modifier.</b>
+<br>
+<br>
+Success: If you are successful, the target is shaken for one round. This duration <b>increases by 1 round for every 5 by which you beat the DC</b>. You can only threaten an opponent this way if it is within 30 feet and can clearly see and hear you. Using demoralize on the same creature only extends the duration; it does not create a stronger fear condition.
+<br>
+<br>
+Fail: The opponent is not shaken.
+<br>
+<br>
+Action Demoralizing an opponent is a standard action.
+<br>
+<br>
+Retry? You can attempt to intimidate an opponent again, but each additional check increases the DC by +5. This increase resets after one hour has passed. </h3>
+</table>
+`});
+
+//USAGE
+// Replace BUFFNAME with the EXACT name of the buff. The buff must exist in either the Items-Buffs folder, the pf-Buffs compendium or Common Buffs compendium. It will prioritize in that order.
+//Replace TARGET(S) with one or more of the following (separated by commas for multiple types):
+//selected : will target selections
+//character name : will target named character. must be exact
+//template : all tokens within the last template of the source player
+//me/myself : self
+//PCs : all players
+//NPCs : all npcs
+//You can use a minus sign (-) to remove from list. For example "PCs,-Jaxsar" will target all PCs except Jaxsar
+//Replace BUFFLEVEL with the level of the buff. You can also use formulas such as @classes.bard.level
+//LENGTH and DISTANCE are OPTIONAL. Delete everything after BUFFLEVEL if not using.
+//Replace LENGTH with a number/formula and units [Turn(s), Round(s), Minute(s), Hour(s)]. Ex: "10 Minutes"
+//Replace DISTANCE with a number corresponding to tiles
