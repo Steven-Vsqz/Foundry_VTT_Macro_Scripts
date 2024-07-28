@@ -1,0 +1,23 @@
+// Macro Description: Changes the controlled token's current X and Y coordinates when the game is paused.
+
+// Configuration
+const newX = 3200; // Set the new X coordinate value (change as needed)
+const newY = 6200; // Set the new Y coordinate value (change as needed)
+
+// Main Script
+(async () => {
+  const controlledTokens = canvas.tokens.controlled;
+  
+  if (controlledTokens.length === 0) {
+    ui.notifications.warn('Please select a token to change its coordinates.');
+  } else {
+    const token = controlledTokens[0];
+    
+    if (game.paused) {
+      await token.document.update({ x: newX, y: newY });
+      ui.notifications.info('Token coordinates updated.');
+    } else {
+      ui.notifications.warn('The game must be paused to change token coordinates.');
+    }
+  }
+})();
