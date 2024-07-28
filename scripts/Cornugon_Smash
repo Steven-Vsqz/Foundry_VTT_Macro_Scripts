@@ -1,0 +1,96 @@
+// Place macro on weapon of choice and enable power attack
+// Define the path to the conditionals dictionary
+let isPowerAttack = shared.attackData.powerAttack;
+
+// Check if isPowerAttack is true
+if (isPowerAttack === true) {
+    (async () => {
+        // Get the currently controlled token
+        let controlledToken = canvas.tokens.controlled[0];
+
+        // Check if a token is controlled
+        if (!controlledToken) {
+            ui.notifications.error("No token is currently controlled.");
+            return;
+        }
+
+        // Get the actor from the controlled token
+        const actor = controlledToken.actor;
+
+        // Define the content of the dialog with professional styling
+        let content = `
+            <style>
+                .cornugon-dialog {
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                    color: #333;
+                }
+                .cornugon-dialog h1 {
+                    margin: 0 0 10px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #e74c3c;
+                    text-align: center;
+                }
+                .cornugon-dialog p {
+                    margin: 0 0 10px;
+                    font-weight: bold;
+                    color: #2c3e50;
+                    text-align: center;
+                    font-size: 16px;
+                }
+                .cornugon-dialog .dialog-buttons {
+                    display: flex;
+                    justify-content: space-around;
+                    margin-top: 20px;
+                }
+                .cornugon-dialog button {
+                    background-color: #2980b9;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 14px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                }
+                .cornugon-dialog button:hover {
+                    background-color: #1c5980;
+                }
+                .cornugon-dialog .no-button {
+                    background-color: #c0392b;
+                }
+                .cornugon-dialog .no-button:hover {
+                    background-color: #89291f;
+                }
+            </style>
+            <div class="cornugon-dialog">
+                <h1>Power Attack is active!</h1>
+                <p>Attempt to demoralize using Cornugon Smash?</p>
+            </div>
+        `;
+        
+        // Create the dialog
+        new Dialog({
+            title: "Cornugon Smash",
+            content: content,
+            buttons: {
+                yes: {
+                    label: "Fear My Words!",
+                    callback: async () => {
+                        // If "Yes" is selected, roll the Intelligence-based skill
+                        await actor.rollSkill("int");
+                    }
+                },
+                no: {
+                    label: "Sore Throat",
+                    callback: () => {
+                        // If "No" is selected, do nothing
+                        ui.notifications.info("You chose not to attempt to demoralize.");
+                    }
+                }
+            },
+            default: "no"
+        }).render(true);
+    })();
+}
