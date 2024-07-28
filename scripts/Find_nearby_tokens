@@ -1,0 +1,43 @@
+// Macro Description: Finds tokens within a 1000ft radius of the controlled token and displays them with buttons to show their location, elevation, and target the token.
+
+// Configuration
+const maxDistance = 1000; // Set the maximum distance in feet (change as needed)
+
+// Main Script
+const controlledTokens = canvas.tokens.controlled;
+if (controlledTokens.length === 0) {
+  ui.notifications.warn('Please select a token to find nearby tokens.');
+} else {
+  const token = controlledTokens[0];
+  const controlledPosition = token.center;
+  const nearbyTokens = canvas.tokens.placeables.filter((t) => {
+    const distance = canvas.grid.measureDistance(controlledPosition, t.center);
+    return t !== token && distance <= maxDistance;
+  });
+
+  if (nearbyTokens.length === 0) {
+    ui.notifications.info('No nearby tokens found.');
+  } else {
+    let content = `<h2>Nearby Tokens</h2>`;
+    nearbyTokens.forEach((t) => {
+      const { x, y } = t.center;
+      const elevation = t.data.elevation || 0;
+      const buttonId = `showLocation_${t.id}`;
+      content += `<button id="${buttonId}">${t.name} (Location: ${x}, ${y}, Elevation: ${elevation})</button>`;
+      content += `<script>document.getElementById("${buttonId}").addEventListener("click", () => {
+        canvas.animatePan({x: ${x}, y: ${y}, scale: 1});
+        canvas.tokens.selectObjects({ids: ["${t.id}"]});
+      });</script>`;
+    });
+
+    new Dialog({
+      title: 'Nearby Tokens',
+      content: content,
+      buttons: {
+        ok: {
+          label: 'Close',
+        },
+      },
+    }).render(true);
+  }
+}
