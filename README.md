@@ -1,4 +1,4 @@
-# Macros for Foundry VTT
+# Foundry VTT
 
 Foundry VTT (Virtual Tabletop) is a feature-rich, online platform designed for running tabletop role-playing games (RPGs). It offers robust tools for game masters and players, including dynamic lighting, audio integration, and extensive customization options. Foundry VTT supports various game systems, providing a flexible and immersive experience for remote RPG sessions.
 <br>
@@ -7,11 +7,80 @@ Foundry VTT (Virtual Tabletop) is a feature-rich, online platform designed for r
 <img src="https://i.imgur.com/9LlMPJZ.png" height="80%" width="80%" alt="Failed RDP Steps"/>
 </div>
 <br>
+<hr>
+
+<!-- TOC -->
+
+- [What are Macros?](#macros-in-a-nutshell)
+- [Instructions](#instructions)
+- [Quick start](#quick-start)
+- [Tutorials](#tutorials)
+  - [Healing Spell & Potion Tracker](#healing-spell-and-potion-tracker)
+  - [Run a file on save](doc/tutorials.md#run-a-file-on-save)
+- [Guides](#guides)
+ 
+<!-- /TOC -->
+
+## Macros in a nutshell
 <p>
 Macros in Foundry VTT are highly useful as they automate repetitive tasks, such as rolling dice or managing character abilities, enhancing game efficiency. They streamline gameplay by reducing manual input, allowing game masters and players to focus more on storytelling and strategy. Macros ensure consistency and accuracy in game mechanics, reducing the potential for human error. Additionally, they can be customized to fit specific needs, such as automating complex combat sequences or managing inventory. This flexibility saves time and enhances the gaming experience, making sessions smoother and more enjoyable for everyone involved.
 </p>
 
+## Instructions
+<details close>
+    <summary>How to setup</summary>
+    
+- Choose the weapon/item/feature you want the script to execute on.
+- Open the weapon/item/feature panel by Right clicking.
+- Navigate to the "Advanced" tab.
+  
+<img src="https://i.imgur.com/lrkobCc.png" height="40%" width="50%" alt="SneakAttack"/>
 
+- In the "Script Calls" section, click the "+" button to add a new script.
+- Paste the provided code into the new script section.
+- Give the script a name of your choice.
+<img src="https://i.imgur.com/AxUcD3r.png" height="40%" width="50%" alt="SneakAttack"/>
+
+- Done!
+
+</details>
+
+<details close>
+<summary>
+    
+## Healing Spell and Potion Tracker
+
+</summary>
+<h2>Summary</h2>
+This script helps you manage your healing spells and potions/extracts in Foundry VTT. It shows a dialog box where you can pick a spell from a list (like Cure Light Wounds), and it tells you how many prepared charges are left. 
+<br />
+<br />
+
+If you choose a spell, it automatically subtracts one charge and updates your character sheet.
+```lua
+// Subtract 1 charge
+    preparedAmount -= 1;
+
+// Update the spell with the new preparedAmount
+    await spell.update({ "data.preparation.preparedAmount": preparedAmount });
+```
+It also checks your inventory for any potions or extracts that start with "Potion of Cure" or "Extract of Cure" and shows you how many you have left.
+
+```lua
+// Search for potions and extracts in the inventory
+    const inventoryItems = actor.items.filter(item => item.name.startsWith("Potion of Cure") || item.name.startsWith("Extract of Cure"));
+    let itemQuantities = {};
+    inventoryItems.forEach(item => {
+    itemQuantities[item.name] = item.data.data.quantity || 0;
+    });
+```
+A simply and clean interface. It provides you with the information you need without having to manually view your resources.
+
+![Healing bomb](https://github.com/user-attachments/assets/246c3966-9316-4f65-bbfa-3c8c9ecfef51)
+<hr>   
+ 
+
+</details>
 
 ## Example Usage
 
