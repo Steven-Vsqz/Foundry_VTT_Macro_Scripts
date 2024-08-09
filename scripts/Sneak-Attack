@@ -1,0 +1,71 @@
+// Get the actor (assumes the selected token represents the actor)
+let actor = canvas.tokens.controlled[0]?.actor;
+if (!actor) {
+  ui.notifications.warn("Please select a token.");
+  return;
+}
+
+// Calculate the number of sneak attack dice
+let rogueLevel = actor.classes.rogue?.level || 0;
+let numDice = Math.ceil(rogueLevel / 2);
+
+// List of flavors
+let flavors = [
+  "Feel the sting of my blade!",
+  "You never saw it coming!",
+  "Swift and silent, just like the night.",
+  "One strike, one kill.",
+  "Your end was inevitable.",
+  "From the shadows, I strike!",
+  "A perfect hit!",
+  "You were no match for me.",
+  "Silent but deadly.",
+  "The shadows are my ally.",
+  "Precision and power!",
+  "You should have watched your back.",
+  "A fatal mistake.",
+  "Too slow!",
+  "I strike where it hurts the most.",
+  "Your guard was down.",
+  "A swift end to your misery.",
+  "You won't be getting up from that.",
+  "The darkness claims another.",
+  "A clean cut.",
+  "You never stood a chance.",
+  "The perfect ambush.",
+  "Your fate was sealed.",
+  "A strike from the shadows.",
+  "You were too predictable.",
+  "A warrior's precision.",
+  "Caught you off guard!",
+  "The last thing you'll ever feel.",
+  "A deadly surprise.",
+  "The shadows hide my blade."
+];
+
+// Function to get a random flavor
+function getRandomFlavor() {
+  return flavors[Math.floor(Math.random() * flavors.length)];
+}
+
+// Create the dialog
+new Dialog({
+  title: "Sneak Attack",
+  content: `<p align="center"; style="color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">Apply Sneak Attack Damage?</p>`,
+  buttons: {
+    yes: {
+      label: `<span style="color: #fff; background-color: #28a745; padding: 5px 10px; border-radius: 5px;">Die Die Die!</span>`,
+      callback: async () => {
+        let roll = await new Roll(`${numDice}d6`).evaluate({async: true});
+        roll.toMessage({
+          speaker: ChatMessage.getSpeaker({ actor: actor }),
+          flavor: `<blockquote style="font-size: 1.2em; margin: 0; padding: 10px; border-left: 5px solid #ccc;">${getRandomFlavor()}</blockquote>`
+        });
+      }
+    },
+    no: {
+      label: `<span style="color: #fff; background-color: #dc3545; padding: 5px 10px; border-radius: 5px;">Next time!</span>`
+    }
+  },
+  default: "yes"
+}).render(true);
