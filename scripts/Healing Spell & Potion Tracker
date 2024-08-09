@@ -1,0 +1,103 @@
+// Define the list of spell names
+const spellNames = ["Cure Light Wounds", "Cure Moderate Wounds", "Cure Serious Wounds", "Cure Critical Wounds"];
+
+// Get the actor who executed the macro (assumes a token is selected)
+const actor = canvas.tokens.controlled[0]?.actor;
+
+if (!actor) {
+  ui.notifications.error("No token selected!");
+  return;
+}
+
+// Get all items of type "spell"
+const spells = actor.items.filter(item => item.type === "spell");
+
+// Prepare an object to store prepared amounts for each spell
+let preparedAmounts = {};
+spellNames.forEach(spellName => {
+  const spell = spells.find(spell => spell.name === spellName);
+  preparedAmounts[spellName] = spell ? (spell.data.data.preparation.preparedAmount || 0) : 0;
+});
+
+// Search for potions and extracts in the inventory
+const inventoryItems = actor.items.filter(item => item.name.startsWith("Potion of Cure") || item.name.startsWith("Extract of Cure"));
+let itemQuantities = {};
+inventoryItems.forEach(item => {
+  itemQuantities[item.name] = item.data.data.quantity || 0;
+});
+
+// Create a dialog box for spell selection
+new Dialog({
+  title: "Select Spell",
+  content: `
+    <form>
+      <div style="text-align: center; margin-bottom: 15px;">
+        <label style="font-weight: bold; font-size: 16px;">What spell are you using?</label>
+      </div>
+      <div class="form-group" style="text-align: center; margin-bottom: 10px;">
+        <select id="spell-name" name="spell-name" style="width: 100%; padding: 2px; font-size: 14px; text-align-last: center;">
+          ${spellNames.map(spell => `<option value="${spell}">${spell}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label style="font-weight: bold; font-size: 14px; color: #2e8b57;">Prepared Amounts:</label>
+        <ul style="list-style-type: none; padding: 0; margin-top: 5px;">
+          ${spellNames.map(spell => `
+            <li style="padding: 5px 0; border-bottom: 1px solid #ddd;">
+              <span style="font-weight: bold; ${preparedAmounts[spell] === 0 ? 'color: red;' : 'color: #4682b4;'}">${spell}:</span>
+              <span style="font-size: 14px; color: #555;">${preparedAmounts[spell]}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+      <div class="form-group">
+        <label style="font-weight: bold; font-size: 14px; color: #8b0000;">Potion and Extract Quantities:</label>
+        <ul style="list-style-type: none; padding: 0; margin-top: 5px;">
+          ${Object.keys(itemQuantities).map(item => `
+            <li style="padding: 5px 0; border-bottom: 1px solid #ddd;">
+              <span style="font-weight: bold; color: #4682b4;">${item}:</span>
+              <span style="font-size: 14px; color: #555;">${itemQuantities[item]}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    </form>
+  `,
+  buttons: {
+    ok: {
+      label: "OK",
+      callback: async (html) => {
+        const spellName = html.find('[name="spell-name"]').val();
+
+        // Search for the selected spell in the array
+        const spell = spells.find(spell => spell.name === spellName);
+
+        if (spell) {
+          // Retrieve the preparedAmount
+          let preparedAmount = spell.data.data.preparation.preparedAmount || 0;
+
+          // Check if there are any charges left
+          if (preparedAmount <= 0) {
+            ui.notifications.warn(`No prepared charges left for "${spellName}"!`);
+            return;
+          }
+
+          // Subtract 1 charge
+          preparedAmount -= 1;
+
+          // Update the spell with the new preparedAmount
+          await spell.update({ "data.preparation.preparedAmount": preparedAmount });
+
+          // Notify the user
+          ui.notifications.info(`Used one prepared charge of "${spellName}". ${preparedAmount} charges remaining.`);
+        } else {
+          ui.notifications.warn(`Spell "${spellName}" not found.`);
+        }
+      }
+    },
+    cancel: {
+      label: "Cancel"
+    }
+  },
+  default: "ok"
+}).render(true);
