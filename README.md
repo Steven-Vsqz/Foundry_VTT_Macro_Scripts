@@ -91,7 +91,7 @@ Macros in Foundry VTT are highly useful as they automate repetitive tasks, such 
   <br />
   <br />
   
-  Calculates how many sneak attack dice you get based on your rogue level. Doesn't have to be only rogues, any class that grants you sneak attack can be placed here. Just change the classes.(class) to the one you want.
+  Calculates how many sneak attack dice you get based on your rogue level. Doesn't have to be only rogues, any class that grants you sneak attack can be placed here. Just change the `actor.classes.(class)` to the one you want.
   ```lua
   // Calculate the number of sneak attack dice
     let rogueLevel = actor.classes.rogue?.level || 0;
