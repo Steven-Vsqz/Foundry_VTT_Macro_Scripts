@@ -16,7 +16,7 @@ Foundry VTT (Virtual Tabletop) is a feature-rich, online platform designed for r
 - [Quick start](#quick-start)
 - [Tutorials](#tutorials)
   - [Healing Spell & Potion Tracker](#healing-spell-and-potion-tracker)
-  - [Run a file on save](doc/tutorials.md#run-a-file-on-save)
+  - [Sneak Attack](#sneak-attack)
 - [Guides](#guides)
  
 <!-- /TOC -->
@@ -47,37 +47,69 @@ Macros in Foundry VTT are highly useful as they automate repetitive tasks, such 
 
 <details close>
 <summary>
-    
+   
 ## Healing Spell and Potion Tracker
 
 </summary>
-<h2>Summary</h2>
-This script helps you manage your healing spells and potions/extracts in Foundry VTT. It shows a dialog box where you can pick a spell from a list (like Cure Light Wounds), and it tells you how many prepared charges are left. 
-<br />
-<br />
+  <h2>Description</h2>
+  This script helps you manage your healing spells and potions/extracts in Foundry VTT. It shows a dialog box where you can pick a spell from a list (like Cure Light Wounds), and it tells you how many prepared charges are left. 
+  <br />
+  <br />
+  
+  If you choose a spell, it automatically subtracts one charge and updates your character sheet.
+  ```lua
+  // Subtract 1 charge
+      preparedAmount -= 1;
+  
+  // Update the spell with the new preparedAmount
+      await spell.update({ "data.preparation.preparedAmount": preparedAmount });
+  ```
+  It also checks your inventory for any potions or extracts that start with "Potion of Cure" or "Extract of Cure" and shows you how many you have left.
+  
+  ```lua
+  // Search for potions and extracts in the inventory
+      const inventoryItems = actor.items.filter(item => item.name.startsWith("Potion of Cure") || item.name.startsWith("Extract of Cure"));
+      let itemQuantities = {};
+      inventoryItems.forEach(item => {
+      itemQuantities[item.name] = item.data.data.quantity || 0;
+      });
+  ```
+  A simply and clean interface. It provides you with the information you need without having to manually view your resources.
+  
+  ![Healing bomb](https://github.com/user-attachments/assets/246c3966-9316-4f65-bbfa-3c8c9ecfef51)
+  <hr>   
+ 
+ </details>
 
-If you choose a spell, it automatically subtracts one charge and updates your character sheet.
-```lua
-// Subtract 1 charge
-    preparedAmount -= 1;
+<details close>
+<summary>
+  
+## Sneak Attack
+</summary>
+  <h2>Description</h2>
+  When you want to apply sneak attack damage in your game, this macro gets your rogue's level, figures out how many dice you should roll, and pops up a dialog box. You can choose to roll the damage with a bit of stylish flavor text or skip it for now. It’s a fun way to   add some flair to your sneak attacks!
+  <br />
+  <br />
+  
+  Calculates how many sneak attack dice you get based on your rogue level. Doesn't have to be only rogues, any class that grants you sneak attack can be placed here. Just change the classes.(class) to the one you want.
+  ```lua
+  // Calculate the number of sneak attack dice
+    let rogueLevel = actor.classes.rogue?.level || 0;
+    let numDice = Math.ceil(rogueLevel / 2);
+  ```
+  ![Sneak Attack](https://github.com/user-attachments/assets/82e4eabb-8c8c-40c6-8d4a-c2ab19b7eaa5)
 
-// Update the spell with the new preparedAmount
-    await spell.update({ "data.preparation.preparedAmount": preparedAmount });
-```
-It also checks your inventory for any potions or extracts that start with "Potion of Cure" or "Extract of Cure" and shows you how many you have left.
+  Just to add some stylish flavor text to the attack, the script randomly picks from a list of pre-made phrases to display. 
+  ```lua
+  // Function to get a random flavor
+    function getRandomFlavor() {
+      return flavors[Math.floor(Math.random() * flavors.length)];
+    }
+  ```
 
-```lua
-// Search for potions and extracts in the inventory
-    const inventoryItems = actor.items.filter(item => item.name.startsWith("Potion of Cure") || item.name.startsWith("Extract of Cure"));
-    let itemQuantities = {};
-    inventoryItems.forEach(item => {
-    itemQuantities[item.name] = item.data.data.quantity || 0;
-    });
-```
-A simply and clean interface. It provides you with the information you need without having to manually view your resources.
-
-![Healing bomb](https://github.com/user-attachments/assets/246c3966-9316-4f65-bbfa-3c8c9ecfef51)
-<hr>   
+  <h3>Displayed result:</h3>
+  <img src="https://i.imgur.com/KLHUM0S.png" height="40%" width="40%" alt="SneakAttack"/>
+  <hr>   
  
 
 </details>
