@@ -17,6 +17,9 @@ if (isPowerAttack === true) {
         // Get the actor from the controlled token
         const actor = controlledToken.actor;
 
+        // Get the Intimidation skill modifier
+        let intimidationModifier = actor.data.data.skills.int.mod;
+
         // Define the content of the dialog with professional styling
         let content = `
             <style>
@@ -63,10 +66,22 @@ if (isPowerAttack === true) {
                 .cornugon-dialog .no-button:hover {
                     background-color: #89291f;
                 }
+                .cornugon-dialog .intimidation-section {
+                    margin-top: 10px;
+                    text-align: center;
+                    color: #2c3e50;
+                }
+                .cornugon-dialog .intimidation-value {
+                    color: #16a085;
+                    font-weight: bold;
+                }
             </style>
             <div class="cornugon-dialog">
                 <h1>Power Attack is active!</h1>
                 <p>Attempt to demoralize using Cornugon Smash?</p>
+                <div class="intimidation-section">
+                    <p>Intimidation Modifier: <span class="intimidation-value">${intimidationModifier >= 0 ? '+' : ''}${intimidationModifier}</span></p>
+                </div>
             </div>
         `;
         
@@ -78,7 +93,7 @@ if (isPowerAttack === true) {
                 yes: {
                     label: "Fear My Words!",
                     callback: async () => {
-                        // If "Yes" is selected, roll the Intelligence-based skill
+                        // If "Yes" is selected, roll the Intimidation skill
                         await actor.rollSkill("int");
                     }
                 },
