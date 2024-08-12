@@ -1,4 +1,3 @@
-// Place macro on weapon of choice and enable power attack
 // Define the path to the conditionals dictionary
 let isPowerAttack = shared.attackData.powerAttack;
 
@@ -19,9 +18,10 @@ if (isPowerAttack === true) {
 
         // Get the Intimidation skill modifier
         let intimidationModifier = actor.data.data.skills.int.mod;
+console.log(actor)
 
         // Define the content of the dialog with professional styling
-        let content = `
+        let content = 
             <style>
                 .cornugon-dialog {
                     font-family: Arial, sans-serif;
@@ -69,21 +69,17 @@ if (isPowerAttack === true) {
                 .cornugon-dialog .intimidation-section {
                     margin-top: 10px;
                     text-align: center;
-                    color: #2c3e50;
-                }
-                .cornugon-dialog .intimidation-value {
                     color: #16a085;
-                    font-weight: bold;
                 }
             </style>
             <div class="cornugon-dialog">
                 <h1>Power Attack is active!</h1>
                 <p>Attempt to demoralize using Cornugon Smash?</p>
                 <div class="intimidation-section">
-                    <p>Intimidation Modifier: <span class="intimidation-value">${intimidationModifier >= 0 ? '+' : ''}${intimidationModifier}</span></p>
+                    <p>Intimidation Modifier: <strong>${intimidationModifier >= 0 ? '+' : ''}${intimidationModifier}</strong></p>
                 </div>
             </div>
-        `;
+        ;
         
         // Create the dialog
         new Dialog({
