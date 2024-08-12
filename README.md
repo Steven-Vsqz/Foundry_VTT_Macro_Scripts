@@ -5,9 +5,11 @@ Foundry VTT (Virtual Tabletop) is a feature-rich, online platform designed for r
 <br>
 <div align="center">
 <img src="https://i.imgur.com/9LlMPJZ.png" height="80%" width="80%" alt="Failed RDP Steps"/>
-</div>
-<br>
+  <h3>🛠️Languages & Tools Used!</h3>
 
+  ![image](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+  ![image](https://img.shields.io/badge/ChatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
+</div>
 
 <!-- TOC -->
 ## Table of Contents
