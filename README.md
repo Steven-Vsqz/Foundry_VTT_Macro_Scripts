@@ -7,19 +7,17 @@ Foundry VTT (Virtual Tabletop) is a feature-rich, online platform designed for r
 <img src="https://i.imgur.com/9LlMPJZ.png" height="80%" width="80%" alt="Failed RDP Steps"/>
 </div>
 <br>
-<hr>
+
 
 <!-- TOC -->
-
+## Table of Contents
 - [What are Macros?](#macros-in-a-nutshell)
 - [Instructions](#instructions)
-- [Quick start](#quick-start)
-- [Tutorials](#tutorials)
+- [List of Macros]()
   - [Cornugon Smash](#cornugon-smash)
   - [Healing Spell & Potion Tracker](#healing-spell-and-potion-tracker)
   - [Sneak Attack](#sneak-attack)
   - [Targeted Token Info](#targeted-token-info)
-- [Guides](#guides)
  
 <!-- /TOC -->
 
@@ -28,9 +26,12 @@ Foundry VTT (Virtual Tabletop) is a feature-rich, online platform designed for r
 Macros in Foundry VTT are highly useful as they automate repetitive tasks, such as rolling dice or managing character abilities, enhancing game efficiency. They streamline gameplay by reducing manual input, allowing game masters and players to focus more on storytelling and strategy. Macros ensure consistency and accuracy in game mechanics, reducing the potential for human error. Additionally, they can be customized to fit specific needs, such as automating complex combat sequences or managing inventory. This flexibility saves time and enhances the gaming experience, making sessions smoother and more enjoyable for everyone involved.
 </p>
 
-## Instructions
 <details close>
-    <summary>How to setup</summary>
+<summary>
+
+  ## Instructions
+      
+</summary>
     
 - Choose the weapon/item/feature you want the script to execute on.
 - Open the weapon/item/feature panel by Right clicking.
@@ -69,18 +70,6 @@ Macros in Foundry VTT are highly useful as they automate repetitive tasks, such 
   <hr>
 </details>
 
-<details close>
-  <summary>
-    
-  ## Targeted Token Info
-    
-  </summary>
-  <h2>Description</h2>
-  <p>When you target a token on the canvas, this script gathers all sorts of information about that character, including their name, hit points, ability scores, armor class, combat stats, and even what buffs     they're under. It also lists their weapons, equipment, and other features like class abilities, feats, and spells. All of this is presented in a clean, easy-to-read dialog box with sections that you can expand   or collapse as needed. The layout includes some helpful tooltips to explain what each stat means, and it uses some slick styling to make the info pop. If you forget to target a token, the script will remind you with an error notification.</p>
-    
-  ![Token Info](https://github.com/user-attachments/assets/94e24b24-355d-41dd-8e14-50e45199f6a4)
-<hr>
-</details>
 
 
 
@@ -149,4 +138,17 @@ Macros in Foundry VTT are highly useful as they automate repetitive tasks, such 
   <h3>Displayed result:</h3>
   <img src="https://i.imgur.com/KLHUM0S.png" height="40%" width="40%" alt="SneakAttack"/>
   <hr>   
+</details>
+
+<details close>
+  <summary>
+    
+  ## Targeted Token Info
+    
+  </summary>
+  <h2>Description</h2>
+  <p>When you target a token on the canvas, this script gathers all sorts of information about that character, including their name, hit points, ability scores, armor class, combat stats, and even what buffs     they're under. It also lists their weapons, equipment, and other features like class abilities, feats, and spells. All of this is presented in a clean, easy-to-read dialog box with sections that you can expand   or collapse as needed. The layout includes some helpful tooltips to explain what each stat means, and it uses some slick styling to make the info pop. If you forget to target a token, the script will remind you with an error notification.</p>
+    
+  ![Token Info](https://github.com/user-attachments/assets/94e24b24-355d-41dd-8e14-50e45199f6a4)
+<hr>
 </details>
