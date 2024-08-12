@@ -46,6 +46,27 @@ Macros in Foundry VTT are highly useful as they automate repetitive tasks, such 
 </details>
 
 <details close>
+  <summary>
+
+  ## Cornugon Smash 
+    
+  </summary>
+  <h2>Description</h2>
+  When "Power Attack" is active, this script triggers a dialog box asking if you want to use "Cornugon Smash" to intimidate your target. The dialog is well-styled and even shows off your Intimidation modifier in   green, making it easy to see your potential impact.
+  
+  ```lua
+    // Check if isPowerAttack is true
+    if (isPowerAttack === true) {
+        (async () => {
+  ```
+  
+  You can choose to proceed with the demoralize attempt or skip it entirely. The script ensures a token is selected before doing anything and gives a heads-up, if no token is selected.
+  
+
+  <img src="https://i.imgur.com/lybQDsa.png" height="40%" width="50%" alt="SneakAttack"/>
+</details>
+
+<details close>
 <summary>
    
 ## Healing Spell and Potion Tracker
