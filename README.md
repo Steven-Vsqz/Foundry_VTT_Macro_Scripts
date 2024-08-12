@@ -15,8 +15,10 @@ Foundry VTT (Virtual Tabletop) is a feature-rich, online platform designed for r
 - [Instructions](#instructions)
 - [Quick start](#quick-start)
 - [Tutorials](#tutorials)
+  - [Cornugon Smash](#cornugon-smash)
   - [Healing Spell & Potion Tracker](#healing-spell-and-potion-tracker)
   - [Sneak Attack](#sneak-attack)
+  - [Targeted Token Info](#targeted-token-info)
 - [Guides](#guides)
  
 <!-- /TOC -->
@@ -64,7 +66,23 @@ Macros in Foundry VTT are highly useful as they automate repetitive tasks, such 
   
 
   <img src="https://i.imgur.com/lybQDsa.png" height="40%" width="50%" alt="SneakAttack"/>
+  <hr>
 </details>
+
+<details close>
+  <summary>
+    
+  ## Targeted Token Info
+    
+  </summary>
+  <h2>Description</h2>
+  <p>When you target a token on the canvas, this script gathers all sorts of information about that character, including their name, hit points, ability scores, armor class, combat stats, and even what buffs     they're under. It also lists their weapons, equipment, and other features like class abilities, feats, and spells. All of this is presented in a clean, easy-to-read dialog box with sections that you can expand   or collapse as needed. The layout includes some helpful tooltips to explain what each stat means, and it uses some slick styling to make the info pop. If you forget to target a token, the script will remind you with an error notification.</p>
+    
+  ![Token Info](https://github.com/user-attachments/assets/94e24b24-355d-41dd-8e14-50e45199f6a4)
+<hr>
+</details>
+
+
 
 <details close>
 <summary>
@@ -131,48 +149,4 @@ Macros in Foundry VTT are highly useful as they automate repetitive tasks, such 
   <h3>Displayed result:</h3>
   <img src="https://i.imgur.com/KLHUM0S.png" height="40%" width="40%" alt="SneakAttack"/>
   <hr>   
- 
-
 </details>
-
-## Example Usage
-
-I developed and applied a macro to a feature named Cornugon Smash. This macro was integrated with a weapon, ensuring that when the weapon is used, it performs a conditional check to determine if the player has the "Power Attack" ability enabled. Upon confirmation, the macro triggers a dialog box that prompts the player with the option to utilize the Cornugon Smash ability. This enhancement streamlines the decision-making process during gameplay and provides an intuitive user interface for ability management.
-
-<div align="center">
-    
-![CornugonSmash](https://github.com/user-attachments/assets/b4a91c7d-e738-4034-a15e-7f117e557c4e)
-
-</div>
-
-# Macros
-- [Sneak Attack](https://github.com/Steven-Vsqz/Macro-Sneak_Attack)
-- 
-
-
-### Example Code
-
-    // Create the dialog
-        new Dialog({
-            title: "Cornugon Smash",
-            content: content,
-            buttons: {
-                yes: {
-                    label: "Fear My Words!",
-                    callback: async () => {
-                        // If "Yes" is selected, roll the Intelligence-based skill
-                        await actor.rollSkill("int");
-                    }
-                },
-                no: {
-                    label: "Sore Throat",
-                    callback: () => {
-                        // If "No" is selected, do nothing
-                        ui.notifications.info("You chose not to attempt to demoralize.");
-                    }
-                }
-            },
-            default: "no"
-        }).render(true);
-
-
